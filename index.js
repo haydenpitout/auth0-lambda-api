@@ -1,6 +1,6 @@
 const AWS = require('aws-sdk');
 const dynamo = new AWS.DynamoDB.DocumentClient();
-const TABLE_NAME = 'medzi';
+const TABLE_NAME = 'collection';
 
 exports.handler = async (event, context) => {
   console.log('Received event:', JSON.stringify(event, null, 2));
@@ -16,14 +16,14 @@ exports.handler = async (event, context) => {
         body = await dynamo.scan({ TableName: TABLE_NAME }).promise();
         break;
       case 'POST':
-        const { drugName, drugDescription } = JSON.parse(event.body);
+        const { name, description } = JSON.parse(event.body);
         await dynamo
           .put({
             TableName: TABLE_NAME,
             Item: {
               id: context.awsRequestId,
-              drugName,
-              drugDescription,
+              name,
+              description,
             },
           })
           .promise();
